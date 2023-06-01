@@ -5,27 +5,11 @@ from werkzeug.utils import secure_filename
 from pathlib import Path
 from queue import Queue
 import threading
-from time import sleep
-from shutil import rmtree
-from datetime import datetime
 
 app = Flask(__name__)
 
-if  os.path.exists("upload"):
-    rmtree("upload")
-if  os.path.exists("download"):
-    rmtree("download")
-
-sleep(5)
-
-if not os.path.exists("upload"):
-    os.makedirs("upload")
-if not os.path.exists("download"):
-    os.makedirs("download")
-
 UPLOAD_FOLDER = Path('upload')
 OUTPUT_FOLDER = Path('download')
-
 ALLOWED_EXTENSIONS = {'docx'}
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -44,9 +28,9 @@ def convert_file(file_path, output_filename):
     # command = ['abiword', f'--to={output_filename}', file_path]
     # command = ['unoconvert', '--convert-to', 'pdf', file_path, output_filename]
     # command = ['libreoffice', '--nologo', '--infilter=Text (encoded):UTF8','--headless', '--convert-to', 'pdf', '--outdir', output_filename, file_path]
-    command = ['libreoffice','--headless', '--convert-to', 'pdf', '--outdir', output_filename, file_path]
+    command = ['libreoffice', '--infilter=Text (encoded):UTF8', '--headless', '--convert-to', 'pdf', '--outdir', output_filename, file_path]
     try:
-        print(command)
+        
         subprocess.Popen(command)
         print('Conversion started:', file_path)
     except subprocess.CalledProcessError as e:
@@ -63,13 +47,12 @@ def process_conversion(file, file_path):
     task_queue.put((file_path, output_filename))
 
     # Generate download link
-    download_link = "/download?filename={}/{}".format(output_file.name,output_file.name)
+    download_link = "/download?filename={}/{}".format(output_file.name, output_file.name)
 
     response = {'success': True, 'message': 'Conversion in progress', 'download_link': download_link}
     return jsonify(response)
 
 def conversion_worker():
-    print("Start")
     while True:
         file_path, output_filename = task_queue.get()
 
@@ -94,7 +77,6 @@ def conversion_worker():
 @app.route('/', methods=['GET'])
 def index():
     return render_template('index.html')
-
 
 @app.route('/convert', methods=['POST'])
 def convert():
