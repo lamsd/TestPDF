@@ -41,12 +41,8 @@ def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 def convert_file(file_path, output_filename):
-    # command = ['abiword', f'--to={output_filename}', file_path]
-    # command = ['unoconvert', '--convert-to', 'pdf', file_path, output_filename]
-    # command = ['libreoffice', '--nologo', '--infilter=Text (encoded):UTF8','--headless', '--convert-to', 'pdf', '--outdir', output_filename, file_path]
     command = ['libreoffice','--headless', '--convert-to', 'pdf', '--outdir', output_filename, file_path]
     try:
-        print(command)
         subprocess.Popen(command)
         print('Conversion started:', file_path)
     except subprocess.CalledProcessError as e:
@@ -62,7 +58,6 @@ def process_conversion(file, file_path, time_data):
     # Start a new task for file conversion
     task_queue.put((file_path, output_filename))
 
-    # Generate download link
     download_link = "/download?filename={}/{}".format(time_data, output_file.name)
 
     response = {'success': True, 'message': 'Conversion in progress', 'download_link': download_link}
@@ -101,7 +96,6 @@ def convert():
         file_path = UPLOAD_FOLDER  / filename
         return process_conversion(data, file_path, time_data)
 
-
     response = {'success': False, 'message': 'Invalid file extension'}
     return jsonify(response)
 
@@ -112,7 +106,6 @@ def download():
     return send_from_directory(app.config['OUTPUT_FOLDER'], filename, as_attachment=True)
 
 if __name__ == '__main__':
-    # Start the conversion worker thread
     conversion_thread = threading.Thread(target=conversion_worker)
     conversion_thread.daemon = True
     conversion_thread.start()
