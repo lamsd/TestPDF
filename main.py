@@ -38,11 +38,13 @@ task_status = {}
 task_lock = threading.Lock()
 
 
+
+
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 def convert_file(file_path, output_filename):
-    command = ['libreoffice','--headless', '--convert-to', 'pdf', '--outdir', output_filename, file_path]
+    command = ['libreoffice7.5','--headless', '--convert-to', 'pdf', '--outdir', output_filename, file_path]
     try:
         subprocess.Popen(command)
         print('Conversion started:', file_path)
