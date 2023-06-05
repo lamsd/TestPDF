@@ -11,7 +11,7 @@ fi
 echo "Starting"
 sudo -S <<< "$password" apt-get update -y
 sudo -S <<< "$password" apt-get upgrade -y
-sudo -s <<< apt-get install libreoffice -y  > /dev/null 2>&1
+
 sleep 5
 rm -rf "$OFFICE.zip" "$OFFICE"
 
@@ -46,6 +46,7 @@ for package_name1 in ${package_name[@]}; do
 done
 sleep 5
 cd  "$OFFICE"
+sudo -s <<< apt-get install libreoffice -y  > /dev/null 2>&1
 sudo -S <<< "$password" apt autoremove -y > /dev/null 2>&1
 sleep 5
 sudo -S <<< "$password" dpkg -i lib*.deb > /dev/null 2>&1
