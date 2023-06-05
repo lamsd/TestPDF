@@ -15,7 +15,7 @@ sudo -s <<< apt-get install libreoffice -y  > /dev/null 2>&1
 
 rm -rf "$OFFICE.zip" "$OFFICE"
 
-myArray=("git" "python3-pip" "vim" "curl" "wget")
+myArray=("git" "python3-pip" "vim" "curl" "wget" "unzip")
 for package_name in ${myArray[@]}; do
     if ! dpkg -s "$package_name" >/dev/null 2>&1; then
         echo "Failed to install the package $package_name."
@@ -26,7 +26,7 @@ for package_name in ${myArray[@]}; do
 done
 
 myArray1=("gdown" "flask")
-for package_name in ${myArray[@]}; do
+for package_name in ${myArray1[@]}; do
     if ! pip3 show "$package_name" &> /dev/null; then
         pip3 install "$package_name"
     fi
