@@ -12,7 +12,6 @@ echo "Starting"
 sudo -S <<< "$password" apt-get update -y
 sudo -S <<< "$password" apt-get upgrade -y
 
-
 rm -rf "$OFFICE.zip" "$OFFICE"
 
 myArray=("git" "python3-pip" "vim" "curl" "wget" "unzip")
@@ -43,7 +42,7 @@ for package_name1 in ${package_name[@]}; do
 done
 sleep 5
 sudo -S <<< "$password" apt-get update -y
-sudo -S <<< apt-get install libreoffice -y  
+sudo apt-get install libreoffice -y  
 sleep 5
 cd  "$OFFICE"
 sudo -S <<< "$password" apt autoremove -y > /dev/null 2>&1
